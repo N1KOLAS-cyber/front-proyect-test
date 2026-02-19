@@ -1,0 +1,70 @@
+/* Cinematic Button Styles */
+.btn {
+  padding: 14px 28px;
+  border-radius: 4px; /* Minimal radius */
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:active {
+  transform: scale(0.96);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+/* Primary - Red Glow */
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-primary), #d00000);
+  background-size: 200% 200%;
+  color: #fff;
+  border: 1px solid transparent;
+  box-shadow: 0 10px 20px -10px var(--color-glow); /* Initial glow */
+}
+
+.btn-primary:hover {
+  background-position: right center;
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px -5px var(--color-glow), 0 0 10px var(--color-glow-subtle);
+  border-color: rgba(255,255,255,0.2);
+}
+
+/* Secondary / Outline - Glass Effect */
+.btn-outline {
+  background-color: rgba(255, 255, 255, 0.05); /* Minimal glass */
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  backdrop-filter: blur(10px);
+}
+
+.btn-outline:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--text-primary);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+  transform: scale(1.02);
+}
