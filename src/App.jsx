@@ -11,7 +11,7 @@ function App() {
   return (
     <Router>
       <Header />
-      <main style={{maxWidth: '1440px', margin: '0 auto', minHeight: '100vh'}}>
+      <main style={{ minHeight: '100vh', width: '100%' }}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/cartelera" element={<Cartelera />} />

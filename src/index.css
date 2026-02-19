@@ -50,8 +50,8 @@ body {
      Replace the url below with your image in 'public/img/backgrounds/fondo.jpg'
   */
   background-image: 
-    linear-gradient(rgba(11,11,11,0.8), rgba(11,11,11,0.9)), /* Dark overlay */
-    url("/img/backgrounds/fondo.jpg"); /* User provided image path */
+    linear-gradient(rgba(11,11,11,0.85), rgba(11,11,11,0.95)),
+    url("/img/backgrounds/fondo_de_la_pagina.png");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
@@ -75,4 +75,105 @@ h1, h2, h3, h4 {
 
 .glow-text {
   text-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* ── Layout Utility ───────────────────── */
+.container {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* ── Animations ───────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in {
+  animation: fadeIn 0.4s ease both;
+}
+
+/* ── Card hover ───────────────────────── */
+.movie-card-hover:hover {
+  transform: translateY(-4px) scale(1.015);
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — Tablet  ≤ 900px
+══════════════════════════════════════════ */
+@media (max-width: 900px) {
+
+  /* Hero */
+  .hero-title { font-size: 2rem !important; }
+
+  /* Destacada: stack vertical */
+  .featured-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .featured-grid .featured-poster {
+    height: 220px !important;
+  }
+
+  /* En Cartelera: 3 columns */
+  .cartelera-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* Otros: single column */
+  .otros-card {
+    grid-template-columns: 1fr !important;
+  }
+  .otros-card .otros-icon-panel {
+    flex-direction: row !important;
+    padding: 16px 20px !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+  }
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE — Mobile  ≤ 600px
+══════════════════════════════════════════ */
+@media (max-width: 600px) {
+
+  /* Reduce header padding */
+  .container { padding-left: 16px !important; padding-right: 16px !important; }
+
+  /* Hero */
+  .hero-section {
+    height: 50vh !important;
+  }
+
+  /* En Cartelera: 2 columns */
+  .cartelera-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    padding: 0 12px !important;
+  }
+
+  /* Alimentos: 2 columns */
+  .food-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  /* Cartelera full page: 2 cols */
+  .movie-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px 8px !important;
+  }
+
+  /* Otros: fully stacked */
+  .otros-card {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Hide showtime buttons on tiny screens */
+  .showtime-btns { display: none !important; }
+
+  /* Buttons side by side → stack */
+  .hero-buttons {
+    flex-direction: column !important;
+    align-items: center !important;
+  }
 }
