@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../components/Card.css';
 
@@ -29,6 +29,34 @@ const fullWidthStyle = {
 };
 
 function Home() {
+    // 4. Consumo Básico de Datos Dinámicos (fetch y useEffect)
+    const [noticias, setNoticias] = useState([]);
+    const [loadingNoticias, setLoadingNoticias] = useState(true);
+
+    useEffect(() => {
+        // Obteniendo datos desde nuestro archivo JSON local
+        fetch('/noticias.json')
+            .then(response => response.json())
+            .then(data => {
+                setNoticias(data);
+                setLoadingNoticias(false);
+            })
+            .catch(error => {
+                console.error("Error fetching noticias:", error);
+                setLoadingNoticias(false);
+            });
+    }, []);
+
+    // Estado para saber qué noticia está expandida
+    const [expandedNews, setExpandedNews] = useState({});
+
+    const toggleNews = (id) => {
+        setExpandedNews(prev => ({
+            ...prev,
+            [id]: !prev[id]
+        }));
+    };
+
     return (
         <div className="fade-in" style={{ minHeight: '100vh', marginTop: '60px', color: '#fff', background: 'transparent', overflowX: 'hidden' }}>
 
@@ -266,6 +294,68 @@ function Home() {
                         </div>
                     ))}
                 </div>
+            </div>
+
+            {/* ══════════════════════════════════
+                NOTICIAS DEL CINE (Datos Dinámicos API)
+            ══════════════════════════════════ */}
+            <div className="container" style={{ padding: '0 32px 60px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
+                    <div style={{ width: 3, height: 18, background: 'var(--accent-red)', borderRadius: 2 }} />
+                    <h2 style={{ fontSize: '1.2rem', fontWeight: 800, letterSpacing: '0.5px', textTransform: 'uppercase', color: '#fff' }}>
+                        NOTICIAS DEL CINE
+                    </h2>
+                    <span style={{ background: 'rgba(229, 9, 20, 0.1)', color: '#E50914', fontSize: '0.65rem', padding: '3px 8px', borderRadius: '4px', fontWeight: 800 }}>LIVE</span>
+                </div>
+
+                {loadingNoticias ? (
+                    <div style={{ textAlign: 'center', padding: '40px 0', color: '#888' }}>
+                        <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '2rem', marginBottom: '10px' }}></i>
+                        <p>Cargando últimas noticias...</p>
+                    </div>
+                ) : (
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+                        {noticias.map(noticia => (
+                            <div key={noticia.id} style={{
+                                background: '#111', borderRadius: '8px', overflow: 'hidden', border: '1px solid #1e1e1e', transition: 'transform 0.2s ease', display: 'flex', flexDirection: 'column'
+                            }} className="movie-card-hover">
+                                <div style={{ height: '160px', overflow: 'hidden', position: 'relative' }}>
+                                    <img src={noticia.image} alt="Noticia" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                    <span style={{ position: 'absolute', top: 10, left: 10, background: 'var(--accent-red)', color: '#fff', fontSize: '0.6rem', fontWeight: 800, padding: '3px 8px', borderRadius: '4px' }}>
+                                        {noticia.category}
+                                    </span>
+                                </div>
+                                <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+                                    <span style={{ color: '#888', fontSize: '0.65rem', marginBottom: '8px', fontWeight: 600 }}>
+                                        <i className="fa-regular fa-clock" style={{ marginRight: '5px' }}></i>{noticia.date}
+                                    </span>
+                                    <h3 style={{ color: '#fff', fontSize: '1rem', fontWeight: 700, marginBottom: '10px', lineHeight: 1.3, textTransform: 'capitalize' }}>
+                                        {noticia.title}
+                                    </h3>
+                                    <p style={{ color: '#aaa', fontSize: '0.75rem', lineHeight: 1.5, marginBottom: '16px', flexGrow: 1 }}>
+                                        {expandedNews[noticia.id] ? noticia.body : noticia.body.substring(0, 80) + '...'}
+                                    </p>
+                                    <button 
+                                        onClick={() => toggleNews(noticia.id)}
+                                        style={{
+                                        background: expandedNews[noticia.id] ? 'var(--accent-red)' : 'transparent', 
+                                        color: '#fff', 
+                                        border: expandedNews[noticia.id] ? 'none' : '1px solid #333', 
+                                        padding: '8px 0', 
+                                        borderRadius: '4px', 
+                                        fontSize: '0.75rem', 
+                                        fontWeight: 600, 
+                                        cursor: 'pointer', 
+                                        transition: 'all 0.2s', 
+                                        width: '100%'
+                                    }}>
+                                        {expandedNews[noticia.id] ? 'MOSTRAR MENOS' : 'LEER MÁS'}
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
             </div>
 
         </div>

@@ -29,6 +29,9 @@ const foods = [
 function Alimentos() {
     const [activeCategory, setActiveCategory] = useState('TODOS');
     const [cart, setCart] = useState([]);
+    
+    // Interacción Dinámica 3: Confirmación de compra (Confirmación de compra en alimentos)
+    const [purchaseSummary, setPurchaseSummary] = useState(null);
 
     const filtered = activeCategory === 'TODOS'
         ? foods
@@ -37,6 +40,12 @@ function Alimentos() {
     const addToCart = (id) => setCart(prev =>
         prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]
     );
+
+    const handlePurchase = () => {
+        setPurchaseSummary(`¡Compra confirmada! Has preparado tu pedido de ${cart.length} producto(s).`);
+        setCart([]); // Limpiar carrito
+        setTimeout(() => setPurchaseSummary(null), 5000); // Ocultar mensaje después de 5 seg
+    };
 
     return (
         <div className="fade-in" style={{ minHeight: '100vh', marginTop: '60px', background: 'transparent', color: '#fff' }}>
@@ -86,11 +95,11 @@ function Alimentos() {
                 }}>
                     {filtered.map(food => (
                         <div key={food.id} style={{
-                            background: '#111',
-                            border: '1px solid #1e1e1e',
+                            background: cart.includes(food.id) ? '#2a1114' : '#111', // Interacción Dinámica 4: Selección activa de elementos
+                            border: cart.includes(food.id) ? '1px solid var(--accent-red)' : '1px solid #1e1e1e',
                             borderRadius: '10px',
                             overflow: 'hidden',
-                            transition: 'transform 0.2s ease',
+                            transition: 'all 0.2s ease',
                             cursor: 'pointer',
                         }} className="movie-card-hover">
 
@@ -134,6 +143,28 @@ function Alimentos() {
                         </div>
                     ))}
                 </div>
+
+                {/* Confirmación de Compra */}
+                {cart.length > 0 && (
+                    <div style={{ marginTop: '30px', textAlign: 'center', padding: '24px', background: 'rgba(229, 9, 20, 0.05)', border: '1px solid rgba(229, 9, 20, 0.2)', borderRadius: '12px' }}>
+                        <h3 style={{ color: '#fff', marginBottom: '8px', fontSize: '1.2rem', fontWeight: 800 }}>Tu Pedido ({cart.length} artículos)</h3>
+                        <p style={{ color: '#aaa', fontSize: '0.8rem', marginBottom: '16px' }}>Revisa tus productos y finaliza la compra para recoger en dulcería.</p>
+                        <button onClick={handlePurchase} style={{
+                            background: 'var(--accent-red)', color: '#fff', border: 'none', padding: '12px 24px', borderRadius: '6px', fontWeight: 800, cursor: 'pointer', transition: 'background 0.2s', letterSpacing: '0.5px'
+                        }}>
+                            <i className="fa-solid fa-credit-card" style={{ marginRight: 8 }}></i> PAGAR AHORA
+                        </button>
+                    </div>
+                )}
+
+                {/* Mensaje de éxito de la compra */}
+                {purchaseSummary && (
+                    <div style={{ marginTop: '30px', textAlign: 'center', padding: '20px', background: 'rgba(76, 175, 80, 0.1)', border: '1px solid #4CAF50', borderRadius: '12px', animation: 'fadeIn 0.5s' }}>
+                        <i className="fa-solid fa-circle-check" style={{ color: '#4CAF50', fontSize: '2.5rem', marginBottom: '12px' }}></i>
+                        <h3 style={{ color: '#4CAF50', fontSize: '1.2rem', fontWeight: 800, marginBottom: '6px' }}>{purchaseSummary}</h3>
+                        <p style={{ color: '#ccc', fontSize: '0.85rem' }}>Podrás recoger tu pedido en la fila rápida presentando este dispositivo.</p>
+                    </div>
+                )}
             </div>
         </div>
     );

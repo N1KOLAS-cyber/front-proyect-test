@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import '../components/Card.css';
 
 const movies = [
-    { id: 1, title: 'AVATAR: EL CAMINO DEL AGUA', classification: 'B', duration: '192 min', genre: 'Ciencia Ficción', image: '/img/cartelera/avatar.jpeg', tags: ['IMAX', '3D'], badge: 'GARANTÍA' },
-    { id: 2, title: 'ZOOTOPIA 2', classification: 'AA', duration: '100 min', genre: 'Animación', image: '/img/cartelera/Zootopia_2.jpg', tags: ['PREMIUM'], badge: 'ESTRENO' },
-    { id: 3, title: 'JURASSIC WORLD', classification: 'B', duration: '147 min', genre: 'Aventura', image: '/img/cartelera/jurasic_parck.jpg', tags: ['4DX'], badge: '4DX' },
-    { id: 4, title: 'EL SEÑOR DE LOS ANILLOS', classification: 'B', duration: '178 min', genre: 'Fantasía', image: '/img/cartelera/el_señor_de_los_anillos.jpg', tags: ['PLATINO'], badge: 'CLÁSICO' },
-    { id: 5, title: 'F1', classification: 'B', duration: '120 min', genre: 'Acción', image: '/img/cartelera/f1.jpg', tags: ['ATMOS'], badge: 'PRÓXIMAMENTE' },
+    { id: 1, title: 'AVATAR: EL CAMINO DEL AGUA', classification: 'B', duration: '192 min', genre: 'Ciencia Ficción', image: '/img/cartelera/avatar.jpeg', tags: ['IMAX', '3D'], badge: 'GARANTÍA', description: 'Jake Sully vive con su nueva familia formada en la luna extrasolar Pandora. Una vez que una amenaza familiar regresa, Jake debe trabajar con Neytiri y el ejército de la raza Na\'vi para proteger su hogar.' },
+    { id: 2, title: 'ZOOTOPIA 2', classification: 'AA', duration: '100 min', genre: 'Animación', image: '/img/cartelera/Zootopia_2.jpg', tags: ['PREMIUM'], badge: 'ESTRENO', description: 'La oficial Judy Hopps y el zorro Nick Wilde se unen nuevamente para resolver un nuevo y misterioso caso en la vibrante metrópolis de mamíferos, Zootopia.' },
+    { id: 3, title: 'JURASSIC WORLD', classification: 'B', duration: '147 min', genre: 'Aventura', image: '/img/cartelera/jurasic_parck.jpg', tags: ['4DX'], badge: '4DX', description: 'El parque temático Jurassic World ofrece a sus visitantes la experiencia de ver dinosaurios reales. Pero algo sale mal cuando un dinosaurio modificado genéticamente escapa.' },
+    { id: 4, title: 'EL SEÑOR DE LOS ANILLOS', classification: 'B', duration: '178 min', genre: 'Fantasía', image: '/img/cartelera/el_señor_de_los_anillos.jpg', tags: ['PLATINO'], badge: 'CLÁSICO', description: 'Un humilde hobbit y sus ocho compañeros emprenden un viaje para destruir el poderoso Anillo Único y salvar a la Tierra Media del Señor Oscuro Sauron.' },
+    { id: 5, title: 'F1', classification: 'B', duration: '120 min', genre: 'Acción', image: '/img/cartelera/f1.jpg', tags: ['ATMOS'], badge: 'PRÓXIMAMENTE', description: 'Un piloto de carreras retirado vuelve al volante para entrenar y competir en la máxima categoría del automovilismo, la Fórmula 1, enfrentando nuevos desafíos.' },
 ];
 
 const TABS = ['HOY', 'MAÑANA', 'PRÓXIMOS ESTRENOS'];
@@ -15,6 +15,25 @@ const FORMATS = ['TODOS', 'IMAX', 'PLATINO', 'PREMIUM', '4DX', 'ATMOS'];
 function Cartelera() {
     const [activeTab, setActiveTab] = useState('HOY');
     const [activeFormat, setActiveFormat] = useState('TODOS');
+    
+    // Interacción Dinámica 1: Lista de películas favoritas (Estado y Funcionalidad)
+    const [favorites, setFavorites] = useState([]);
+    
+    // Interacción Dinámica 2: Mostrar/ocultar descripción (Estado para saber qué tarjeta está expandida)
+    const [expandedDesc, setExpandedDesc] = useState({});
+
+    const toggleFavorite = (id) => {
+        setFavorites(prev => 
+            prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
+        );
+    };
+
+    const toggleDescription = (id) => {
+        setExpandedDesc(prev => ({
+            ...prev,
+            [id]: !prev[id]
+        }));
+    };
 
     const filtered = activeFormat === 'TODOS'
         ? movies
@@ -30,6 +49,13 @@ function Cartelera() {
                     <h1 style={{ fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-0.5px' }}>CARTELERA</h1>
                 </div>
                 <p style={{ fontSize: '0.8rem', color: '#888', marginLeft: 13 }}>Selecciona tu película y compra boletos</p>
+                {/* Indicador de favoritos en la cabecera (se actualiza dinámicamente) */}
+                {favorites.length > 0 && (
+                    <div style={{ marginLeft: 13, marginTop: 10, display: 'inline-block', background: 'rgba(229, 9, 20, 0.2)', color: '#ff4d4d', padding: '5px 12px', borderRadius: '15px', fontSize: '0.8rem', fontWeight: 'bold' }}>
+                        <i className="fa-solid fa-heart" style={{ marginRight: 6 }}></i>
+                        {favorites.length} película(s) favorita(s)
+                    </div>
+                )}
             </div>
 
             {/* Day Tabs */}
@@ -115,8 +141,37 @@ function Cartelera() {
                                         }}>{t}</span>
                                     ))}
                                 </div>
-                                <h3 style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff', marginBottom: 2, lineHeight: 1.3 }}>{movie.title}</h3>
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                    <h3 style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff', marginBottom: 2, lineHeight: 1.3, maxWidth: '80%' }}>{movie.title}</h3>
+                                    {/* Botón de favorito dinámico con onClick */}
+                                    <button 
+                                        onClick={() => toggleFavorite(movie.id)}
+                                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: favorites.includes(movie.id) ? '#e50914' : '#555', transition: 'color 0.2s', fontSize: '1.2rem', padding: 0 }}
+                                        title={favorites.includes(movie.id) ? "Quitar de favoritos" : "Agregar a favoritos"}
+                                    >
+                                        <i className={favorites.includes(movie.id) ? "fa-solid fa-heart" : "fa-regular fa-heart"}></i>
+                                    </button>
+                                </div>
                                 <p style={{ fontSize: '0.65rem', color: '#888', marginBottom: 10 }}>{movie.genre} • {movie.duration}</p>
+
+                                {/* Botón para mostrar/ocultar descripción dinámicamente con onClick */}
+                                <button 
+                                    onClick={() => toggleDescription(movie.id)}
+                                    style={{
+                                        background: 'transparent', color: '#ccc', border: '1px solid #444',
+                                        padding: '4px 8px', borderRadius: '4px', fontSize: '0.65rem',
+                                        fontWeight: 600, cursor: 'pointer', marginBottom: '10px', width: '100%',
+                                        transition: 'background 0.2s'
+                                    }}
+                                >
+                                    {expandedDesc[movie.id] ? 'Ocultar Sinopsis' : 'Ver Sinopsis'}
+                                </button>
+                                
+                                {expandedDesc[movie.id] && (
+                                    <p style={{ fontSize: '0.7rem', color: '#ddd', marginBottom: '12px', lineHeight: '1.4', background: '#1a1a1a', padding: '8px', borderRadius: '6px' }}>
+                                        {movie.description}
+                                    </p>
+                                )}
 
                                 <div style={{ display: 'flex', gap: 6 }}>
                                     {['15:00', '18:00', '21:00'].map(t => (

@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "title": "El Señor de los Anillos vuelve a IMAX por su Aniversario",
+    "body": "Por tiempo limitado, podrás disfrutar de la trilogía original remasterizada en 4K en las salas IMAX. Una experiencia audiovisual inigualable con sonido envolvente. Compra tus boletos antes de que se agoten.",
+    "category": "CARTELERA",
+    "date": "Hace 2 horas",
+    "image": "/img/cartelera/el_señor_de_los_anillos.jpg"
+  },
+  {
+    "id": 2,
+    "title": "Avatar 3 presenta primeros artes conceptuales",
+    "body": "James Cameron dio un primer vistazo a lo que nos depara la tercera parte en Pandora, presentando nuevas regiones volcánicas, criaturas inéditas y los llamados 'Ash People'.",
+    "category": "ESTRENOS",
+    "date": "Hace 5 horas",
+    "image": "/img/cartelera/avatar.jpeg"
+  },
+  {
+    "id": 3,
+    "title": "Jurassic World: La nueva atracción inmersiva",
+    "body": "¡Atención fans de los dinosaurios! Una nueva experiencia interactiva está en desarrollo donde podrás sentir que recorres el parque usando la tecnología 4DX extrema.",
+    "category": "NOTICIAS",
+    "date": "Hace 1 día",
+    "image": "/img/cartelera/jurasic_parck.jpg"
+  }
+]
