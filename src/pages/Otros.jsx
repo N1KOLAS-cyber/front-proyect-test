@@ -1,58 +1,114 @@
-import React, { useState } from 'react';
+/**
+ * Otros.jsx — PÁGINA DE EXPERIENCIAS Y PROMOS (ruta "/otros")
+ *
+ * CONCEPTOS CLAVE DEMOSTRADOS EN ESTA PÁGINA:
+ *
+ * ┌────────────────────────────────────────────────────────────────┐
+ * │ useEffect + fetch       → Consume promos.json                  │
+ * │ useState (4 estados)    → promos, loading, formData,           │
+ * │                            submittedData                       │
+ * │ Componente reutiliz.    → Usa <PromoCard> con 6 props          │
+ * │ FORMULARIO CONTROLADO   → value + onChange + onSubmit           │
+ * │ preventDefault()        → Evita recarga del navegador          │
+ * │ Estado tipo OBJETO      → formData { name, email }             │
+ * │ Visualización dinámica  → Muestra datos ingresados post-envío  │
+ * └────────────────────────────────────────────────────────────────┘
+ *
+ * ═══════════════════════════════════════════════════════════════
+ *  FORMULARIO CONTROLADO — Concepto más importante de esta página
+ * ═══════════════════════════════════════════════════════════════
+ *
+ * Un formulario "controlado" significa que React CONTROLA el valor de los inputs.
+ * El valor del input NO vive en el DOM, vive en el ESTADO de React.
+ *
+ * ¿Cómo funciona?
+ * 1. El input tiene value={formData.name} → React dicta lo que se muestra
+ * 2. Cuando el usuario teclea → se dispara onChange → handleInputChange
+ * 3. handleInputChange actualiza el estado formData con el nuevo valor
+ * 4. React re-renderiza → el input muestra el nuevo valor desde el estado
+ *
+ * ¿Por qué controlado y no dejar que el DOM maneje el input?
+ * → Porque así React es la "single source of truth" (fuente única de verdad).
+ *   Podemos validar, transformar o usar el valor en cualquier momento.
+ *
+ * FLUJO FORMULARIO:
+ * 1. Usuario teclea → onChange → handleInputChange(e)
+ * 2. e.target.name = "email", e.target.value = "hola@mail.com"
+ * 3. setFormData(prev => ({...prev, [name]: value})) → actualiza solo ese campo
+ * 4. React re-renderiza → el input muestra el nuevo valor
+ * 5. Usuario click "SUSCRIBIRME" → onSubmit → handleSubmit(e)
+ * 6. e.preventDefault() → evita que el navegador recargue la página
+ * 7. setSubmittedData(formData) → guarda los datos enviados
+ * 8. setFormData({name: '', email: ''}) → limpia el formulario
+ * 9. React re-renderiza → muestra el mensaje de éxito con los datos guardados
+ *
+ * TIP PREGUNTA: "¿Qué es un formulario controlado?"
+ * → Es cuando el valor de cada input está vinculado a un estado de React
+ *   mediante value={estado} y onChange={actualizarEstado}. React controla
+ *   lo que el input muestra en todo momento.
+ *
+ * TIP PREGUNTA: "¿Para qué sirve preventDefault()?"
+ * → Por defecto, un <form> al enviarse (submit) recarga la página completa.
+ *   preventDefault() cancela ese comportamiento default del navegador,
+ *   permitiendo que React maneje el envío sin perder el estado de la app.
+ *
+ * TIP PREGUNTA: "¿Cómo se muestra la información después de enviar?"
+ * → submittedData guarda una copia de formData al momento del envío.
+ *   Luego formData se limpia (para el formulario), pero submittedData
+ *   conserva los valores y los muestra en el mensaje de confirmación.
+ *   Es renderizado condicional: {!submittedData ? <Form> : <Mensaje>}
+ *
+ * TIP PREGUNTA: "¿Por qué [name]: value con corchetes?"
+ * → Es "computed property name" de ES6. El valor de la variable name
+ *   se usa como nombre de la propiedad. Si name="email", entonces
+ *   {[name]: value} es equivalente a {email: "valor"}. Esto permite
+ *   que UN solo handler maneje TODOS los inputs del formulario.
+ */
+import React, { useState, useEffect } from 'react';
+import PromoCard from '../components/PromoCard';
 import '../components/Card.css';
 
-const promos = [
-    {
-        id: 1,
-        type: 'MEMBRESÍA',
-        title: 'INVITADO ESPECIAL',
-        sub: 'Acumula el 10% de tus compras en puntos. Refill gratis en palomitas y bebidas.',
-        icon: 'fa-solid fa-star',
-        color: '#C9A227',
-        perks: ['10% en puntos por compra', 'Refill gratis', 'Acceso preferente', 'Premio de cumpleaños']
-    },
-    {
-        id: 2,
-        type: 'PROMO SEMANAL',
-        title: 'MARTES 2×1',
-        sub: 'Todos los martes, 2 boletos al precio de 1 en todas las salas y funciones.',
-        icon: 'fa-solid fa-ticket-simple',
-        color: '#E50914',
-        perks: ['Aplica todas las salas', 'Válido todo el día', 'Sin límite de compras', 'Incluye IMAX y PREMIUM']
-    },
-    {
-        id: 3,
-        type: 'EXPERIENCIA',
-        title: 'PLATINUM SUITE',
-        sub: 'Reclinables eléctricos, servicio a la sala y pantalla 4K Laser. El lujo del cine.',
-        icon: 'fa-solid fa-crown',
-        color: '#7B68EE',
-        perks: ['Butacas reclinables', 'Servicio a la sala', 'Pantalla 4K Laser', 'Sonido Dolby Atmos']
-    }
-];
-
 function Otros() {
-    // Implementación de Formulario Controlado
+    // ═══ ESTADOS ═══
+    const [promos, setPromos] = useState([]);              // Datos de promos.json
+    const [loading, setLoading] = useState(true);           // Loading spinner
+    // Estado OBJETO para el formulario controlado
     const [formData, setFormData] = useState({ name: '', email: '' });
+    // Guarda los datos del último envío para mostrarlos en pantalla
     const [submittedData, setSubmittedData] = useState(null);
 
-    // Evento onChange
+    // ═══ useEffect — FETCH DE PROMOS ═══
+    useEffect(() => {
+        fetch('/promos.json')
+            .then(res => res.json())
+            .then(data => {
+                setPromos(data);
+                setLoading(false);
+            })
+            .catch(err => {
+                console.error("Error fetching promos:", err);
+                setLoading(false);
+            });
+    }, []);
+
+    // ═══ EVENTO onChange — Actualiza el campo correspondiente del formulario ═══
+    // Usa destructuring de e.target y computed property names [name]
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    // Evento onSubmit
+    // ═══ EVENTO onSubmit — Maneja el envío del formulario ═══
     const handleSubmit = (e) => {
-        e.preventDefault();
-        setSubmittedData(formData);
-        setFormData({ name: '', email: '' }); // Limpiar formulario al enviar
+        e.preventDefault();                       // Evita recarga de página
+        setSubmittedData(formData);                // Guarda datos para mostrar
+        setFormData({ name: '', email: '' });      // Limpia el formulario
     };
 
     return (
         <div className="fade-in" style={{ minHeight: '100vh', marginTop: '60px', background: 'transparent', color: '#fff' }}>
 
-            {/* Header */}
+            {/* Encabezado */}
             <div className="container" style={{ padding: '36px 32px 28px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
                     <div style={{ width: 3, height: 18, background: 'var(--accent-red)', borderRadius: 2 }}></div>
@@ -61,93 +117,45 @@ function Otros() {
                 <p style={{ fontSize: '0.8rem', color: '#888', marginLeft: 13 }}>Beneficios exclusivos Cinemex</p>
             </div>
 
-            {/* Promos */}
+            {/* ═══ PROMOS — Usa <PromoCard> pasando cada campo como prop ═══ */}
             <div className="container" style={{ padding: '0 32px 60px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-                {promos.map(promo => (
-                    <div key={promo.id} style={{
-                        background: '#111',
-                        border: '1px solid #1e1e1e',
-                        borderRadius: '12px',
-                        overflow: 'hidden',
-                        display: 'grid',
-                        gridTemplateColumns: '200px 1fr',
-                        transition: 'transform 0.25s'
-                    }} className="movie-card-hover">
-
-                        {/* Left accent panel */}
-                        <div style={{
-                            background: `linear-gradient(135deg, ${promo.color}22 0%, #111 100%)`,
-                            borderRight: `1px solid ${promo.color}33`,
-                            display: 'flex', flexDirection: 'column',
-                            alignItems: 'center', justifyContent: 'center',
-                            padding: '28px 16px', gap: 12
-                        }}>
-                            <div style={{
-                                width: 56, height: 56, borderRadius: '50%',
-                                background: `${promo.color}22`,
-                                border: `2px solid ${promo.color}55`,
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                fontSize: '1.4rem', color: promo.color
-                            }}>
-                                <i className={promo.icon}></i>
-                            </div>
-                            <span style={{
-                                fontSize: '0.55rem', fontWeight: 800, letterSpacing: '2px',
-                                color: promo.color, textAlign: 'center'
-                            }}>{promo.type}</span>
-                        </div>
-
-                        {/* Right content */}
-                        <div style={{ padding: '24px 28px' }}>
-                            <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: 8, color: '#fff' }}>
-                                {promo.title}
-                            </h2>
-                            <p style={{ fontSize: '0.8rem', color: '#888', marginBottom: 16, lineHeight: 1.6 }}>
-                                {promo.sub}
-                            </p>
-
-                            {/* Perks list */}
-                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
-                                {promo.perks.map(perk => (
-                                    <span key={perk} style={{
-                                        background: '#1a1a1a', color: '#bbb',
-                                        padding: '4px 10px', borderRadius: '4px',
-                                        fontSize: '0.65rem', fontWeight: 600,
-                                        border: '1px solid #2a2a2a',
-                                        display: 'flex', alignItems: 'center', gap: 5
-                                    }}>
-                                        <i className="fa-solid fa-check" style={{ color: promo.color, fontSize: '0.55rem' }}></i>
-                                        {perk}
-                                    </span>
-                                ))}
-                            </div>
-
-                            <button style={{
-                                background: promo.color, color: '#fff', border: 'none',
-                                padding: '8px 20px', borderRadius: '6px',
-                                fontWeight: 700, fontSize: '0.75rem', letterSpacing: '0.5px',
-                                cursor: 'pointer'
-                            }}>
-                                EXPLORAR <i className="fa-solid fa-arrow-right" style={{ marginLeft: 6 }}></i>
-                            </button>
-                        </div>
+                {loading ? (
+                    <div style={{ textAlign: 'center', padding: '40px 0', color: '#888' }}>
+                        <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '2rem', marginBottom: '10px' }}></i>
+                        <p>Cargando promociones...</p>
                     </div>
-                ))}
+                ) : (
+                    promos.map(promo => (
+                        <PromoCard
+                            key={promo.id}
+                            title={promo.title}
+                            description={promo.sub}
+                            type={promo.type}
+                            icon={promo.icon}
+                            color={promo.color}
+                            perks={promo.perks}
+                        />
+                    ))
+                )}
             </div>
 
-            {/* Formulario Controlado - Registro de Promociones */}
+            {/* ═══════════════════════════════════════════════════════
+                 FORMULARIO CONTROLADO — Registro de promociones
+                 ═══════════════════════════════════════════════════════ */}
             <div className="container" style={{ padding: '0 32px 60px', marginTop: '10px' }}>
                 <div style={{ background: '#111', padding: '30px', borderRadius: '12px', border: '1px solid #1e1e1e' }}>
                     <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '20px', color: '#E50914' }}>
                         <i className="fa-solid fa-envelope" style={{ marginRight: '10px' }}></i>
                         REGÍSTRATE PARA PROMOCIONES EXCLUSIVAS
                     </h2>
-                    
-                    {/* Renderizado condicional basado en el envío del formulario */}
+
+                    {/* Renderizado condicional: Form O Mensaje de éxito */}
                     {!submittedData ? (
+                        // ═══ FORMULARIO con onSubmit ═══
                         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '15px', maxWidth: '500px' }}>
                             <div>
                                 <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.85rem', color: '#aaa' }}>Nombre completo</label>
+                                {/* INPUT CONTROLADO: value vinculado a estado + onChange actualiza estado */}
                                 <input
                                     type="text"
                                     name="name"
@@ -163,6 +171,7 @@ function Otros() {
                             </div>
                             <div>
                                 <label style={{ display: 'block', marginBottom: '5px', fontSize: '0.85rem', color: '#aaa' }}>Correo electrónico</label>
+                                {/* INPUT CONTROLADO: mismo patrón value + onChange */}
                                 <input
                                     type="email"
                                     name="email"
@@ -176,6 +185,7 @@ function Otros() {
                                     }}
                                 />
                             </div>
+                            {/* type="submit" dispara el evento onSubmit del <form> */}
                             <button type="submit" style={{
                                 marginTop: '10px', background: '#E50914', color: '#fff', border: 'none',
                                 padding: '12px 20px', borderRadius: '6px', fontWeight: 700, cursor: 'pointer', transition: 'background 0.2s', letterSpacing: '0.5px'
@@ -184,12 +194,20 @@ function Otros() {
                             </button>
                         </form>
                     ) : (
+                        // ═══ VISUALIZACIÓN DINÁMICA de los datos ingresados ═══
                         <div style={{ background: 'rgba(76, 175, 80, 0.1)', border: '1px solid #4CAF50', padding: '20px', borderRadius: '8px', color: '#fff' }}>
-                            <h3 style={{ color: '#4CAF50', marginBottom: '10px' }}><i className="fa-solid fa-circle-check" style={{ marginRight: 6 }}></i>¡Registro exitoso!</h3>
-                            <p style={{ margin: 0, fontSize: '0.9rem', color: '#ccc' }}>Gracias por registrarte, <strong style={{color: '#fff'}}>{submittedData.name}</strong>.</p>
-                            <p style={{ margin: '5px 0 0 0', fontSize: '0.9rem', color: '#ccc' }}>Enviaremos nuestras mejores promociones al correo: <strong style={{color: '#fff'}}>{submittedData.email}</strong></p>
-                            <button 
-                                onClick={() => setSubmittedData(null)} 
+                            <h3 style={{ color: '#4CAF50', marginBottom: '10px' }}>
+                                <i className="fa-solid fa-circle-check" style={{ marginRight: 6 }}></i>¡Registro exitoso!
+                            </h3>
+                            {/* Muestra dinámicamente el nombre y email que se ingresaron */}
+                            <p style={{ margin: 0, fontSize: '0.9rem', color: '#ccc' }}>
+                                Gracias por registrarte, <strong style={{ color: '#fff' }}>{submittedData.name}</strong>.
+                            </p>
+                            <p style={{ margin: '5px 0 0 0', fontSize: '0.9rem', color: '#ccc' }}>
+                                Enviaremos nuestras mejores promociones al correo: <strong style={{ color: '#fff' }}>{submittedData.email}</strong>
+                            </p>
+                            <button
+                                onClick={() => setSubmittedData(null)}
                                 style={{ marginTop: '15px', background: 'transparent', border: '1px solid #4CAF50', color: '#4CAF50', padding: '6px 15px', borderRadius: '4px', cursor: 'pointer', fontWeight: 600, transition: 'all 0.2s' }}
                             >
                                 Registrar otro correo

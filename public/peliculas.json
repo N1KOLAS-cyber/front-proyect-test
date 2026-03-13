@@ -1,0 +1,63 @@
+[
+  {
+    "id": 1,
+    "title": "AVATAR: EL CAMINO DEL AGUA",
+    "classification": "B",
+    "duration": "192 min",
+    "genre": "Ciencia Ficción",
+    "image": "/img/cartelera/avatar.jpeg",
+    "tags": ["IMAX", "3D"],
+    "badge": "GARANTÍA",
+    "description": "Jake Sully vive con su nueva familia formada en la luna extrasolar Pandora. Una vez que una amenaza familiar regresa, Jake debe trabajar con Neytiri y el ejército de la raza Na'vi para proteger su hogar.",
+    "featured": false
+  },
+  {
+    "id": 2,
+    "title": "ZOOTOPIA 2",
+    "classification": "AA",
+    "duration": "100 min",
+    "genre": "Animación",
+    "image": "/img/cartelera/Zootopia_2.jpg",
+    "tags": ["PREMIUM"],
+    "badge": "ESTRENO",
+    "description": "La oficial Judy Hopps y el zorro Nick Wilde se unen nuevamente para resolver un nuevo y misterioso caso en la vibrante metrópolis de mamíferos, Zootopia.",
+    "featured": false
+  },
+  {
+    "id": 3,
+    "title": "JURASSIC WORLD",
+    "classification": "B",
+    "duration": "147 min",
+    "genre": "Aventura",
+    "image": "/img/cartelera/jurasic_parck.jpg",
+    "tags": ["4DX"],
+    "badge": "4DX",
+    "description": "El parque temático Jurassic World ofrece a sus visitantes la experiencia de ver dinosaurios reales. Pero algo sale mal cuando un dinosaurio modificado genéticamente escapa.",
+    "featured": false
+  },
+  {
+    "id": 4,
+    "title": "EL SEÑOR DE LOS ANILLOS",
+    "classification": "B",
+    "duration": "178 min",
+    "genre": "Fantasía",
+    "image": "/img/cartelera/el_señor_de_los_anillos.jpg",
+    "tags": ["PLATINO"],
+    "badge": "CLÁSICO",
+    "description": "Un humilde hobbit y sus ocho compañeros emprenden un viaje para destruir el poderoso Anillo Único y salvar a la Tierra Media del Señor Oscuro Sauron.",
+    "featured": true,
+    "subtitle": "Una épica batalla por el destino de la Tierra Media. Una aventura que trasciende el tiempo."
+  },
+  {
+    "id": 5,
+    "title": "F1",
+    "classification": "B",
+    "duration": "120 min",
+    "genre": "Acción",
+    "image": "/img/cartelera/f1.jpg",
+    "tags": ["ATMOS"],
+    "badge": "PRÓXIMAMENTE",
+    "description": "Un piloto de carreras retirado vuelve al volante para entrenar y competir en la máxima categoría del automovilismo, la Fórmula 1, enfrentando nuevos desafíos.",
+    "featured": false
+  }
+]

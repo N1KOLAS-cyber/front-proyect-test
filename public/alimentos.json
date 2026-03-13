@@ -1,0 +1,18 @@
+[
+  { "id": 1,  "title": "Palomitas Mantequilla",  "price": "$110", "cat": "SNACKS",  "icon": "fa-solid fa-bowl-food",    "desc": "El clásico del cine, tamaño jumbo." },
+  { "id": 2,  "title": "Palomitas Caramelo",     "price": "$115", "cat": "SNACKS",  "icon": "fa-solid fa-bowl-food",    "desc": "Dulces y crujientes, irresistibles." },
+  { "id": 3,  "title": "Nachos Especiales",      "price": "$120", "cat": "SNACKS",  "icon": "fa-solid fa-pepper-hot",   "desc": "Con queso derretido y jalapeños." },
+  { "id": 4,  "title": "Papas Fritas",           "price": "$75",  "cat": "SNACKS",  "icon": "fa-solid fa-utensils",     "desc": "Crujientes con sal y kétchup." },
+  { "id": 5,  "title": "Icee Blue Raspberry",    "price": "$95",  "cat": "BEBIDAS", "icon": "fa-solid fa-glass-water",  "desc": "Bebida frozen refrescante." },
+  { "id": 6,  "title": "Refresco Grande",        "price": "$89",  "cat": "BEBIDAS", "icon": "fa-solid fa-bottle-water", "desc": "Pepsi, 7Up o Mirinda. 32oz." },
+  { "id": 7,  "title": "Agua Natural",           "price": "$45",  "cat": "BEBIDAS", "icon": "fa-solid fa-droplet",      "desc": "Agua embotellada 600ml." },
+  { "id": 8,  "title": "Café Americano",         "price": "$65",  "cat": "BEBIDAS", "icon": "fa-solid fa-mug-hot",      "desc": "Café negro, caliente o frío." },
+  { "id": 9,  "title": "Hot Dog Jumbo",          "price": "$85",  "cat": "COMIDA",  "icon": "fa-solid fa-hotdog",       "desc": "Con salsa especial de la casa." },
+  { "id": 10, "title": "Combo Clásico",          "price": "$185", "cat": "COMIDA",  "icon": "fa-solid fa-burger",       "desc": "Palomitas + Refresco grande." },
+  { "id": 11, "title": "Pizza Personal",         "price": "$140", "cat": "COMIDA",  "icon": "fa-solid fa-pizza-slice",  "desc": "Queso o pepperoni, recién horneada." },
+  { "id": 12, "title": "Sandwich de Pollo",      "price": "$110", "cat": "COMIDA",  "icon": "fa-solid fa-bread-slice",  "desc": "Pollo a la plancha con lechuga." },
+  { "id": 13, "title": "Chocolate Crunch",       "price": "$45",  "cat": "DULCES",  "icon": "fa-solid fa-cookie",       "desc": "Barrita de chocolate con cereal." },
+  { "id": 14, "title": "Paleta de Hielo",        "price": "$35",  "cat": "DULCES",  "icon": "fa-solid fa-ice-cream",    "desc": "Sabores: fresa, mango y limón." },
+  { "id": 15, "title": "Gomitas Surtidas",       "price": "$50",  "cat": "DULCES",  "icon": "fa-solid fa-candy-cane",   "desc": "Mix de gomitas de colores." },
+  { "id": 16, "title": "Palomitas Caramelo Sal", "price": "$130", "cat": "DULCES",  "icon": "fa-solid fa-bowl-food",    "desc": "Sabor dulce-salado inigualable." }
+]

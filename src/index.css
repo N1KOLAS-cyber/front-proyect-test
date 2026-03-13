@@ -110,12 +110,19 @@ h1, h2, h3, h4 {
   .featured-grid {
     grid-template-columns: 1fr !important;
   }
-  .featured-grid .featured-poster {
-    height: 220px !important;
+
+  /* En Cartelera Home: 3 columns */
+  .cartelera-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
   }
 
-  /* En Cartelera: 3 columns */
-  .cartelera-grid {
+  /* Cartelera page: 3 columns */
+  .movie-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* Alimentos: 3 columns */
+  .food-grid {
     grid-template-columns: repeat(3, 1fr) !important;
   }
 

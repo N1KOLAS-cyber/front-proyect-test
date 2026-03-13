@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "type": "MEMBRESÍA",
+    "title": "INVITADO ESPECIAL",
+    "sub": "Acumula el 10% de tus compras en puntos. Refill gratis en palomitas y bebidas.",
+    "icon": "fa-solid fa-star",
+    "color": "#C9A227",
+    "perks": ["10% en puntos por compra", "Refill gratis", "Acceso preferente", "Premio de cumpleaños"]
+  },
+  {
+    "id": 2,
+    "type": "PROMO SEMANAL",
+    "title": "MARTES 2×1",
+    "sub": "Todos los martes, 2 boletos al precio de 1 en todas las salas y funciones.",
+    "icon": "fa-solid fa-ticket-simple",
+    "color": "#E50914",
+    "perks": ["Aplica todas las salas", "Válido todo el día", "Sin límite de compras", "Incluye IMAX y PREMIUM"]
+  },
+  {
+    "id": 3,
+    "type": "EXPERIENCIA",
+    "title": "PLATINUM SUITE",
+    "sub": "Reclinables eléctricos, servicio a la sala y pantalla 4K Laser. El lujo del cine.",
+    "icon": "fa-solid fa-crown",
+    "color": "#7B68EE",
+    "perks": ["Butacas reclinables", "Servicio a la sala", "Pantalla 4K Laser", "Sonido Dolby Atmos"]
+  }
+]
