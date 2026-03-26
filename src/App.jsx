@@ -18,12 +18,9 @@
  *   para que los componentes hijos puedan usar Link, NavLink, useNavigate, etc.
  */
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import Header from './components/Header';
-import Home from './pages/Home';
-import Cartelera from './pages/Cartelera';
-import Alimentos from './pages/Alimentos';
-import Otros from './pages/Otros';
+import AppRoutes from './routes/AppRoutes';
 import './App.css';
 
 function App() {
@@ -31,12 +28,7 @@ function App() {
     <Router>
       <Header />
       <main style={{ minHeight: '100vh', width: '100%' }}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/cartelera" element={<Cartelera />} />
-          <Route path="/alimentos" element={<Alimentos />} />
-          <Route path="/otros" element={<Otros />} />
-        </Routes>
+        <AppRoutes />
       </main>
     </Router>
   );

@@ -40,7 +40,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import MovieCard from '../components/MovieCard';
-import '../components/Card.css';
+import { getPeliculas } from '../data/cinemaApi';
 
 const TABS = ['HOY', 'MAÑANA', 'PRÓXIMOS ESTRENOS'];
 const FORMATS = ['TODOS', 'IMAX', 'PLATINO', 'PREMIUM', '4DX', 'ATMOS'];
@@ -56,16 +56,24 @@ function Cartelera() {
 
     // ═══ useEffect — FETCH DE DATOS ═══
     useEffect(() => {
-        fetch('/peliculas.json')
-            .then(res => res.json())
-            .then(data => {
+        let cancelled = false;
+
+        setLoading(true);
+        getPeliculas()
+            .then((data) => {
+                if (cancelled) return;
                 setMovies(data);
                 setLoading(false);
             })
-            .catch(err => {
-                console.error("Error fetching peliculas:", err);
+            .catch((err) => {
+                console.error('Error fetching peliculas:', err);
+                if (cancelled) return;
                 setLoading(false);
             });
+
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     // ═══ MANEJO DE ESTADO ARRAY — sin mutación directa ═══
@@ -160,6 +168,7 @@ function Cartelera() {
                         {filtered.map(movie => (
                             <MovieCard
                                 key={movie.id}
+                                movieId={movie.id}
                                 title={movie.title}
                                 image={movie.image}
                                 classification={movie.classification}

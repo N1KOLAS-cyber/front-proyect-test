@@ -29,7 +29,6 @@
  *   de "single source of truth" (una sola fuente de verdad).
  */
 import React from 'react';
-import './Card.css';
 
 function FoodCard({ title, price, category, description, icon, isInCart, onToggle }) {
   return (

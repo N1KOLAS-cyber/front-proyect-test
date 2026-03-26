@@ -66,7 +66,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import PromoCard from '../components/PromoCard';
-import '../components/Card.css';
+import { getPromos } from '../data/cinemaApi';
 
 function Otros() {
     // ═══ ESTADOS ═══
@@ -79,16 +79,24 @@ function Otros() {
 
     // ═══ useEffect — FETCH DE PROMOS ═══
     useEffect(() => {
-        fetch('/promos.json')
-            .then(res => res.json())
-            .then(data => {
+        let cancelled = false;
+
+        setLoading(true);
+        getPromos()
+            .then((data) => {
+                if (cancelled) return;
                 setPromos(data);
                 setLoading(false);
             })
-            .catch(err => {
-                console.error("Error fetching promos:", err);
+            .catch((err) => {
+                console.error('Error fetching promos:', err);
+                if (cancelled) return;
                 setLoading(false);
             });
+
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     // ═══ EVENTO onChange — Actualiza el campo correspondiente del formulario ═══

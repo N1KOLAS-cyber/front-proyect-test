@@ -39,7 +39,7 @@
  */
 import React, { useState, useEffect } from 'react';
 import FoodCard from '../components/FoodCard';
-import '../components/Card.css';
+import { getAlimentos } from '../data/cinemaApi';
 
 const categories = ['TODOS', 'SNACKS', 'BEBIDAS', 'COMIDA', 'DULCES'];
 
@@ -53,16 +53,24 @@ function Alimentos() {
 
     // ═══ useEffect — FETCH ═══
     useEffect(() => {
-        fetch('/alimentos.json')
-            .then(res => res.json())
-            .then(data => {
+        let cancelled = false;
+
+        setLoading(true);
+        getAlimentos()
+            .then((data) => {
+                if (cancelled) return;
                 setFoods(data);
                 setLoading(false);
             })
-            .catch(err => {
-                console.error("Error fetching alimentos:", err);
+            .catch((err) => {
+                console.error('Error fetching alimentos:', err);
+                if (cancelled) return;
                 setLoading(false);
             });
+
+        return () => {
+            cancelled = true;
+        };
     }, []);
 
     // Filtrado dinámico basado en categoría seleccionada

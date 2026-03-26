@@ -31,7 +31,6 @@
  *   la evaluación se detiene en el && y no intenta llamar a .map().
  */
 import React from 'react';
-import './Card.css';
 
 function PromoCard({ title, description, type, icon, color, perks }) {
   return (

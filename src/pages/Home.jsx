@@ -39,7 +39,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import MovieCard from '../components/MovieCard';
 import MovieCarousel from '../components/MovieCarousel';
-import '../components/Card.css';
+import { getNoticias, getOpiniones, getPeliculas } from '../data/cinemaApi';
 
 const fullWidthStyle = {
     width: '100vw',
@@ -70,35 +70,44 @@ function Home() {
     // Se ejecuta UNA VEZ al montar el componente (dependencia: [])
     // Hace 3 peticiones a archivos JSON en la carpeta /public
     useEffect(() => {
-        // Fetch 1: Películas desde /public/peliculas.json
-        fetch('/peliculas.json')
-            .then(res => res.json())
-            .then(data => {
-                setPeliculas(data);          // Guarda los datos en estado
-                setLoadingPeliculas(false);  // Desactiva el spinner
+        let cancelled = false;
+
+        getPeliculas()
+            .then((data) => {
+                if (cancelled) return;
+                setPeliculas(data);
+                setLoadingPeliculas(false);
             })
-            .catch(err => {
-                console.error("Error fetching peliculas:", err);
+            .catch((err) => {
+                console.error('Error fetching peliculas:', err);
+                if (cancelled) return;
                 setLoadingPeliculas(false);
             });
 
-        // Fetch 2: Noticias desde /public/noticias.json
-        fetch('/noticias.json')
-            .then(res => res.json())
-            .then(data => {
+        getNoticias()
+            .then((data) => {
+                if (cancelled) return;
                 setNoticias(data);
                 setLoadingNoticias(false);
             })
-            .catch(err => {
-                console.error("Error fetching noticias:", err);
+            .catch((err) => {
+                console.error('Error fetching noticias:', err);
+                if (cancelled) return;
                 setLoadingNoticias(false);
             });
 
-        // Fetch 3: Opiniones desde /public/opiniones.json
-        fetch('/opiniones.json')
-            .then(res => res.json())
-            .then(data => setOpiniones(data))
-            .catch(err => console.error("Error fetching opiniones:", err));
+        getOpiniones()
+            .then((data) => {
+                if (cancelled) return;
+                setOpiniones(data);
+            })
+            .catch((err) => {
+                console.error('Error fetching opiniones:', err);
+            });
+
+        return () => {
+            cancelled = true;
+        };
     }, []); // ← [] = solo se ejecuta al montar
 
     // ═══════════════════════════════════════════
@@ -263,16 +272,18 @@ function Home() {
                                     border: '1px solid #2a2a2a', letterSpacing: '1px'
                                 }}>{featured.duration}</span>
                             </div>
-                            <div style={{ display: 'flex', gap: 10 }}>
-                                <button style={{
-                                    background: 'var(--accent-red)', color: '#fff', border: 'none',
-                                    padding: '9px 20px', borderRadius: '6px', fontWeight: 700,
-                                    fontSize: '0.75rem', letterSpacing: '0.5px', cursor: 'pointer'
-                                }}>
-                                    <i className="fa-solid fa-ticket-simple" style={{ marginRight: 6 }} />
-                                    COMPRAR BOLETOS
-                                </button>
-                                <button style={{
+                            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                                <Link to={`/pelicula/${featured.id}`} style={{ textDecoration: 'none' }}>
+                                    <button type="button" style={{
+                                        background: 'var(--accent-red)', color: '#fff', border: 'none',
+                                        padding: '9px 20px', borderRadius: '6px', fontWeight: 700,
+                                        fontSize: '0.75rem', letterSpacing: '0.5px', cursor: 'pointer'
+                                    }}>
+                                        <i className="fa-solid fa-circle-info" style={{ marginRight: 6 }} />
+                                        VER FICHA
+                                    </button>
+                                </Link>
+                                <button type="button" style={{
                                     background: 'transparent', color: '#ccc',
                                     border: '1px solid #2a2a2a', padding: '9px 18px',
                                     borderRadius: '6px', fontWeight: 600,
@@ -326,6 +337,7 @@ function Home() {
                         {peliculas.map((movie) => (
                             <MovieCard
                                 key={movie.id}
+                                movieId={movie.id}
                                 title={movie.title}
                                 image={movie.image}
                                 genre={movie.genre}
