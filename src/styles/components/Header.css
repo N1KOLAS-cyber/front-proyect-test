@@ -1,11 +1,11 @@
-/* Sleek Minimalist Header */
+/* Header */
 .site-header {
   position: fixed;
   top: 0;
   width: 100%;
   height: 60px;
   z-index: 1000;
-  background: linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 100%);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.2) 100%);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -22,7 +22,7 @@
 
 .logo {
   font-family: var(--font-heading);
-  font-size: 1.2rem; /* Reduced from 1.8rem */
+  font-size: 1.2rem;
   font-weight: 800;
   color: #fff;
   letter-spacing: -0.5px;
@@ -33,50 +33,46 @@
 }
 
 .logo-accent {
-  color: var(--color-primary);
+  color: var(--accent-red);
 }
 
-/* Nav Links - Based on user image */
 .main-nav ul {
   display: flex;
   list-style: none;
-  gap: 4px; /* Reduced specific gap for pill feel */
+  gap: 4px;
   margin: 0;
   padding: 0;
   align-items: center;
 }
 
 .main-nav a {
-  color: #888; /* Muted gray for inactive items */
+  color: #888;
   font-weight: 500;
-  font-family: var(--font-body); /* Standard sans-serif */
+  font-family: var(--font-body);
   text-decoration: none;
-  font-size: 0.9rem; /* Smaller text */
-  padding: 8px 16px; /* Pill padding */
-  border-radius: 6px; /* Rounded corners */
+  font-size: 0.9rem;
+  padding: 8px 16px;
+  border-radius: 6px;
   transition: all 0.2s ease;
-  text-transform: capitalize; /* "Inicio", not "INICIO" */
-  letter-spacing: 0; /* Normal spacing */
+  text-transform: capitalize;
+  letter-spacing: 0;
 }
 
 .main-nav a:hover {
   color: var(--text-primary);
-  background-color: rgba(255, 255, 255, 0.05); /* Subtle hover */
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
-/* Active State (Red Pill) */
 .main-nav a.active-link {
-  background-color: rgba(229, 9, 20, 0.15); /* Dark red bg */
-  color: var(--color-primary); /* Bright red text */
+  background-color: rgba(200, 16, 46, 0.2);
+  color: var(--accent-red);
   font-weight: 600;
 }
 
-/* Reset the underline effect */
 .main-nav a::after {
   display: none;
 }
 
-/* Mobile Menu Button */
 .mobile-menu-btn {
   display: none;
   flex-direction: column;
@@ -97,10 +93,9 @@
   transition: all 0.3s ease;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .site-header {
-      height: 50px;
+    height: 50px;
   }
 
   .mobile-menu-btn {
@@ -114,7 +109,7 @@
     width: 100%;
     height: auto;
     background-color: #050505;
-    transform: translateY(-150%); /* Slide down */
+    transform: translateY(-150%);
     transition: transform 0.3s ease-in-out;
     display: flex;
     flex-direction: column;
@@ -132,9 +127,9 @@
     gap: 1rem;
     width: 100%;
   }
-  
+
   .main-nav a {
-      width: 80%;
-      text-align: center;
+    width: 80%;
+    text-align: center;
   }
 }

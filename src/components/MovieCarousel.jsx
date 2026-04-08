@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
@@ -62,9 +63,28 @@ function MovieCarousel({ movies }) {
               }}>
                 {movie.title}
               </h3>
-              <p style={{ fontSize: "0.85rem", color: "#bbb", margin: 0 }}>
+              <p style={{ fontSize: "0.85rem", color: "#bbb", margin: "0 0 14px" }}>
                 {movie.genre}{movie.duration ? ` • ${movie.duration}` : ""}
               </p>
+              <Link
+                to={`/pelicula/${movie.id}`}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 8,
+                  fontSize: "0.78rem",
+                  fontWeight: 700,
+                  color: "#fff",
+                  textDecoration: "none",
+                  padding: "8px 16px",
+                  borderRadius: 6,
+                  background: "var(--accent-red, #E50914)",
+                  boxShadow: "0 0 18px rgba(229,9,20,0.35)",
+                }}
+              >
+                Ver ficha
+                <i className="fa-solid fa-arrow-right" style={{ fontSize: "0.65rem" }} />
+              </Link>
             </div>
           </div>
         </SwiperSlide>

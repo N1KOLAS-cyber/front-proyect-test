@@ -1,24 +1,30 @@
-/**
- * Contacto.jsx — Página adicional (ruta "/contacto"): canal de consultas y soporte.
- */
 import React, { useState } from 'react';
 
 function Contacto() {
+  // Formulario
   const [sent, setSent] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+
+  const handleInputChange = (e) => {
+    // Input controlado
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = (e) => {
+    // Envío
     e.preventDefault();
     setSent(true);
   };
 
   return (
-    <div className="fade-in" style={{ minHeight: '100vh', marginTop: '60px', background: 'transparent', color: '#fff' }}>
-      <div className="container" style={{ padding: '36px 32px 60px', maxWidth: 560 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-          <div style={{ width: 3, height: 18, background: 'var(--accent-red)', borderRadius: 2 }} />
+    <div className="fade-in page-shell">
+      <div className="container page-container" style={{ paddingBottom: 60, maxWidth: 560 }}>
+        <div className="section-title-row" style={{ marginBottom: 8 }}>
+          <div className="section-title-accent" />
           <h1 style={{ fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-0.5px' }}>Contacto</h1>
         </div>
-        <p style={{ fontSize: '0.85rem', color: '#888', marginBottom: 28, marginLeft: 13 }}>
+        <p className="section-subtitle" style={{ fontSize: '0.85rem', marginBottom: 28 }}>
           Dudas sobre funciones, reservas o experiencias premium. Te respondemos lo antes posible.
         </p>
 
@@ -45,6 +51,8 @@ function Contacto() {
               <input
                 id="contact-name"
                 name="name"
+                value={formData.name}
+                onChange={handleInputChange}
                 required
                 autoComplete="name"
                 style={{
@@ -67,6 +75,8 @@ function Contacto() {
                 id="contact-email"
                 name="email"
                 type="email"
+                value={formData.email}
+                onChange={handleInputChange}
                 required
                 autoComplete="email"
                 style={{
@@ -88,6 +98,8 @@ function Contacto() {
               <textarea
                 id="contact-msg"
                 name="message"
+                value={formData.message}
+                onChange={handleInputChange}
                 required
                 rows={5}
                 style={{

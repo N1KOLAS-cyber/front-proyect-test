@@ -1,72 +1,34 @@
-/**
- * Cartelera.jsx — PÁGINA DE CARTELERA (ruta "/cartelera")
- *
- * CONCEPTOS CLAVE DEMOSTRADOS EN ESTA PÁGINA:
- *
- * ┌──────────────────────────────────────────────────────────────┐
- * │ useEffect + fetch     → Consume peliculas.json               │
- * │ useState (6 estados)  → movies, loading, activeTab,          │
- * │                          activeFormat, favorites, expandedDesc│
- * │ Componente reutiliz.  → Usa <MovieCard> con children          │
- * │ Estado tipo ARRAY     → favorites[] (agregar/quitar con       │
- * │                          filter + spread, SIN mutar)          │
- * │ Estado tipo OBJETO    → expandedDesc{} (toggle por id)        │
- * │ Filtrado dinámico     → filtered = movies.filter(...)         │
- * │ Eventos onClick       → tabs, filtros, favoritos, sinopsis    │
- * └──────────────────────────────────────────────────────────────┘
- *
- * FLUJO FAVORITOS (Evento → Estado → Re-renderizado):
- * 1. Usuario hace click en el corazón → onClick={() => toggleFavorite(movie.id)}
- * 2. toggleFavorite ejecuta setFavorites con el callback prev => ...
- * 3. Si el id YA está en el array → lo quita con .filter()
- *    Si NO está → lo agrega con spread [...prev, id]
- * 4. React detecta cambio en favorites → re-renderiza
- * 5. El corazón cambia de gris a rojo, el contador se actualiza
- *
- * TIP PREGUNTA: "¿Por qué usas prev => ... en vez de setFavorites(favorites)?"
- * → Porque el estado puede haber cambiado entre que React programó el update
- *   y cuando se ejecuta. Con prev => ... siempre trabajas con el valor MÁS RECIENTE.
- *   Esto se llama "actualización funcional" y evita bugs de estado stale.
- *
- * TIP PREGUNTA: "¿Por qué MovieCard aquí usa children y en Home no?"
- * → Porque en Cartelera necesitamos contenido adicional (favoritos, sinopsis, horarios).
- *   children permite inyectar JSX personalizado dentro del mismo componente.
- *   Esto demuestra la REUTILIZACIÓN: mismo componente, diferente contenido.
- *
- * TIP PREGUNTA: "¿Cómo funciona el filtrado de formatos?"
- * → activeFormat es un estado. Cuando cambia, 'filtered' se recalcula:
- *   const filtered = activeFormat === 'TODOS' ? movies : movies.filter(m => m.tags.includes(activeFormat))
- *   React re-renderiza y solo muestra las películas del formato seleccionado.
- */
 import React, { useState, useEffect } from 'react';
 import MovieCard from '../components/MovieCard';
-import { getPeliculas } from '../data/cinemaApi';
-
-const TABS = ['HOY', 'MAÑANA', 'PRÓXIMOS ESTRENOS'];
-const FORMATS = ['TODOS', 'IMAX', 'PLATINO', 'PREMIUM', '4DX', 'ATMOS'];
+import { getPeliculas, getUiConfig } from '../data/cinemaApi';
 
 function Cartelera() {
-    // ═══ ESTADOS ═══
-    const [movies, setMovies] = useState([]);             // Películas obtenidas por fetch
-    const [loading, setLoading] = useState(true);          // Spinner mientras carga
-    const [activeTab, setActiveTab] = useState('HOY');     // Tab seleccionado (string)
-    const [activeFormat, setActiveFormat] = useState('TODOS'); // Filtro de formato
-    const [favorites, setFavorites] = useState([]);        // Array de IDs favoritos
-    const [expandedDesc, setExpandedDesc] = useState({});  // Objeto { [id]: bool }
+    // Estado UI
+    const [movies, setMovies] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('HOY');
+    const [activeFormat, setActiveFormat] = useState('TODOS');
+    const [favorites, setFavorites] = useState([]);
+    const [expandedDesc, setExpandedDesc] = useState({});
+    const [uiConfig, setUiConfig] = useState({
+        tabsCartelera: ['HOY'],
+        formatosCartelera: ['TODOS'],
+        showtimesCartelera: ['15:00', '18:00', '21:00'],
+    });
 
-    // ═══ useEffect — FETCH DE DATOS ═══
     useEffect(() => {
         let cancelled = false;
 
+        // Consumo JSON
         setLoading(true);
-        getPeliculas()
-            .then((data) => {
+        Promise.all([getPeliculas(), getUiConfig()])
+            .then(([peliculas, config]) => {
                 if (cancelled) return;
-                setMovies(data);
+                setMovies(peliculas);
+                setUiConfig(config);
                 setLoading(false);
             })
-            .catch((err) => {
-                console.error('Error fetching peliculas:', err);
+            .catch(() => {
                 if (cancelled) return;
                 setLoading(false);
             });
@@ -76,40 +38,34 @@ function Cartelera() {
         };
     }, []);
 
-    // ═══ MANEJO DE ESTADO ARRAY — sin mutación directa ═══
-    // prev.includes(id) verifica si ya es favorito
-    // .filter() crea un NUEVO array sin el id (quitar)
-    // [...prev, id] crea un NUEVO array con el id añadido (agregar)
     const toggleFavorite = (id) => {
+        // Favoritos
         setFavorites(prev =>
             prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id]
         );
     };
 
-    // ═══ MANEJO DE ESTADO OBJETO — spread para inmutabilidad ═══
     const toggleDescription = (id) => {
+        // Sinopsis expandida
         setExpandedDesc(prev => ({
             ...prev,
             [id]: !prev[id]
         }));
     };
 
-    // ═══ FILTRADO DINÁMICO — se recalcula en cada render ═══
     const filtered = activeFormat === 'TODOS'
         ? movies
         : movies.filter(m => m.tags && m.tags.includes(activeFormat));
 
     return (
-        <div className="fade-in" style={{ minHeight: '100vh', marginTop: '60px', background: 'transparent', color: '#fff' }}>
+        <div className="fade-in page-shell">
 
-            {/* Encabezado con contador dinámico de favoritos */}
-            <div className="container" style={{ padding: '36px 32px 20px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
-                    <div style={{ width: 3, height: 18, background: 'var(--accent-red)', borderRadius: 2 }}></div>
+            <div className="container page-container">
+                <div className="section-title-row">
+                    <div className="section-title-accent"></div>
                     <h1 style={{ fontSize: '1.4rem', fontWeight: 800, letterSpacing: '-0.5px' }}>CARTELERA</h1>
                 </div>
-                <p style={{ fontSize: '0.8rem', color: '#888', marginLeft: 13 }}>Selecciona tu película y compra boletos</p>
-                {/* Renderizado condicional: solo se muestra si hay favoritos */}
+                <p className="section-subtitle">Selecciona tu película y compra boletos</p>
                 {favorites.length > 0 && (
                     <div style={{ marginLeft: 13, marginTop: 10, display: 'inline-block', background: 'rgba(229, 9, 20, 0.2)', color: '#ff4d4d', padding: '5px 12px', borderRadius: '15px', fontSize: '0.8rem', fontWeight: 'bold' }}>
                         <i className="fa-solid fa-heart" style={{ marginRight: 6 }}></i>
@@ -118,10 +74,9 @@ function Cartelera() {
                 )}
             </div>
 
-            {/* Tabs — onClick cambia activeTab, el estilo reacciona al estado */}
             <div style={{ borderBottom: '1px solid #222' }}>
                 <div className="container" style={{ padding: '0 32px', display: 'flex', gap: 0 }}>
-                    {TABS.map(tab => (
+                    {uiConfig.tabsCartelera.map(tab => (
                         <button key={tab} onClick={() => setActiveTab(tab)} style={{
                             background: 'none', border: 'none',
                             borderBottom: activeTab === tab ? '2px solid var(--accent-red)' : '2px solid transparent',
@@ -135,10 +90,9 @@ function Cartelera() {
                 </div>
             </div>
 
-            {/* Filtros de formato — onClick cambia activeFormat → filtered se recalcula */}
             <div style={{ background: 'rgba(255,255,255,0.02)', padding: '14px 0', borderBottom: '1px solid #1a1a1a' }}>
                 <div className="container" style={{ padding: '0 32px', display: 'flex', gap: 8, overflowX: 'auto' }}>
-                    {FORMATS.map(fmt => (
+                    {uiConfig.formatosCartelera.map(fmt => (
                         <button key={fmt} onClick={() => setActiveFormat(fmt)} style={{
                             background: activeFormat === fmt ? 'var(--accent-red)' : 'transparent',
                             color: activeFormat === fmt ? '#fff' : '#777',
@@ -152,11 +106,10 @@ function Cartelera() {
                 </div>
             </div>
 
-            {/* ═══ GRID DE PELÍCULAS — Usa <MovieCard> con children ═══ */}
             <div className="container" style={{ padding: '28px 32px 60px' }}>
                 {loading ? (
-                    <div style={{ textAlign: 'center', padding: '40px 0', color: '#888' }}>
-                        <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '2rem', marginBottom: '10px' }}></i>
+                    <div className="loading-state">
+                        <i className="fa-solid fa-spinner fa-spin"></i>
                         <p>Cargando cartelera...</p>
                     </div>
                 ) : (
@@ -174,9 +127,6 @@ function Cartelera() {
                                 classification={movie.classification}
                                 badge={movie.badge}
                             >
-                                {/* ═══ CHILDREN: contenido personalizado dentro de MovieCard ═══ */}
-
-                                {/* Tags del formato */}
                                 <div style={{ display: 'flex', gap: 4, flexWrap: 'wrap', marginBottom: 6 }}>
                                     {movie.tags && movie.tags.map(t => (
                                         <span key={t} style={{
@@ -187,7 +137,6 @@ function Cartelera() {
                                     ))}
                                 </div>
 
-                                {/* Título + botón favorito (onClick → toggleFavorite) */}
                                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                     <h3 style={{ fontSize: '0.8rem', fontWeight: 700, color: '#fff', marginBottom: 2, lineHeight: 1.3, maxWidth: '80%' }}>
                                         {movie.title}
@@ -202,7 +151,6 @@ function Cartelera() {
                                 </div>
                                 <p style={{ fontSize: '0.65rem', color: '#888', marginBottom: 10 }}>{movie.genre} • {movie.duration}</p>
 
-                                {/* Botón sinopsis — onClick → toggleDescription → expandedDesc cambia */}
                                 <button
                                     onClick={() => toggleDescription(movie.id)}
                                     style={{
@@ -215,16 +163,14 @@ function Cartelera() {
                                     {expandedDesc[movie.id] ? 'Ocultar Sinopsis' : 'Ver Sinopsis'}
                                 </button>
 
-                                {/* Renderizado condicional: sinopsis solo visible si expandedDesc[id] es true */}
                                 {expandedDesc[movie.id] && (
                                     <p style={{ fontSize: '0.7rem', color: '#ddd', marginBottom: '12px', lineHeight: '1.4', background: '#1a1a1a', padding: '8px', borderRadius: '6px' }}>
                                         {movie.description}
                                     </p>
                                 )}
 
-                                {/* Horarios — className para ocultar en móvil via CSS */}
                                 <div className="showtime-btns" style={{ display: 'flex', gap: 6 }}>
-                                    {['15:00', '18:00', '21:00'].map(t => (
+                                    {uiConfig.showtimesCartelera.map(t => (
                                         <button key={t} style={{
                                             background: 'none', border: '1px solid #333', color: '#ccc',
                                             padding: '4px 8px', borderRadius: '4px', fontSize: '0.65rem',

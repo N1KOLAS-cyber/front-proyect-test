@@ -8,10 +8,6 @@ import Otros from '../pages/Otros';
 import PeliculaDetalle from '../pages/PeliculaDetalle';
 import Contacto from '../pages/Contacto';
 
-/**
- * AppRoutes: centraliza las definiciones de rutas.
- * Así App.jsx queda solo como “envoltorio” (Header + contenedor principal).
- */
 export default function AppRoutes() {
   return (
     <Routes>

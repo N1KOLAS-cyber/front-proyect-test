@@ -1,33 +1,3 @@
-/**
- * FoodCard.jsx — COMPONENTE REUTILIZABLE para tarjetas de alimentos.
- *
- * CONCEPTOS CLAVE DEMOSTRADOS:
- *
- * 1) Props para datos Y para funciones (callbacks) →
- *    - Datos: title, price, category, description, icon
- *    - Estado del padre: isInCart (booleano que viene del estado cart[] del padre)
- *    - Callback: onToggle (función del padre que modifica el estado cart[])
- *
- * 2) Comunicación hijo → padre via callbacks →
- *    El botón "AGREGAR" llama a onToggle (que es addToCart del padre Alimentos.jsx).
- *    El hijo NO modifica el estado directamente, solo avisa al padre.
- *    FLUJO: Click en botón → onToggle() → padre ejecuta addToCart(id) →
- *    setCart actualiza el estado → React re-renderiza → isInCart cambia → UI se actualiza.
- *
- * 3) Estilos dinámicos basados en props →
- *    background: isInCart ? '#2a1114' : '#111'
- *    El fondo cambia dependiendo de si el item está en el carrito.
- *
- * TIP PREGUNTA: "¿Cómo se comunica un componente hijo con el padre?"
- * → Mediante callbacks. El padre pasa una función como prop (onToggle).
- *   El hijo la ejecuta cuando ocurre un evento. El padre recibe la señal
- *   y actualiza su propio estado, lo que causa un re-renderizado.
- *
- * TIP PREGUNTA: "¿Por qué isInCart viene como prop y no se calcula aquí?"
- * → Porque el estado del carrito (cart[]) vive en Alimentos.jsx (el padre).
- *   Este componente solo MUESTRA datos, no los posee. Esto sigue el principio
- *   de "single source of truth" (una sola fuente de verdad).
- */
 import React from 'react';
 
 function FoodCard({ title, price, category, description, icon, isInCart, onToggle }) {
@@ -64,7 +34,6 @@ function FoodCard({ title, price, category, description, icon, isInCart, onToggl
         </p>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span style={{ fontSize: '1rem', fontWeight: 800, color: '#fff' }}>{price}</span>
-          {/* onClick ejecuta el callback onToggle que viene del padre */}
           <button onClick={onToggle} style={{
             background: isInCart ? '#1e1e1e' : 'var(--accent-red)',
             color: isInCart ? '#888' : '#fff',

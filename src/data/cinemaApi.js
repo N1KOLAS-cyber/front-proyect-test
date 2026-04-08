@@ -1,6 +1,5 @@
-// cinemaApi.js
-// Centraliza el consumo de datos locales (JSON en `public/`) y aplica cache en memoria.
-// Esto evita repetir fetch innecesarios cuando el usuario navega entre rutas.
+// Consumo JSON
+// Cache
 
 const cache = new Map();
 
@@ -15,7 +14,7 @@ async function fetchJson(url) {
       return res.json();
     })
     .catch((err) => {
-      // Si falla, limpiamos del cache para que un reintento futuro funcione.
+      // Reintento
       cache.delete(url);
       throw err;
     });
@@ -42,5 +41,9 @@ export function getPromos() {
 
 export function getAlimentos() {
   return fetchJson('/alimentos.json');
+}
+
+export function getUiConfig() {
+  return fetchJson('/uiConfig.json');
 }
 

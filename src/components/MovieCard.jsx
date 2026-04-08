@@ -1,38 +1,3 @@
-/**
- * MovieCard.jsx — COMPONENTE REUTILIZABLE para tarjetas de películas.
- *
- * CONCEPTOS CLAVE DEMOSTRADOS:
- *
- * 1) Props múltiples → title, image, genre, duration, classification, badge.
- *    Cada página le pasa datos diferentes al mismo componente.
- *
- * 2) children (prop especial de React) → Permite que el padre inyecte
- *    contenido personalizado DENTRO del componente.
- *    - En Home.jsx: No se pasan children → se muestra título + género por defecto.
- *    - En Cartelera.jsx: Se pasan children con favoritos, sinopsis, horarios.
- *    Esto hace al componente FLEXIBLE y REUTILIZABLE en contextos diferentes.
- *
- * 3) Renderizado condicional con && →
- *    {badge && <span>...</span>} solo muestra el badge si existe (no es null/undefined).
- *    {children || (<>fallback</>)} usa children si hay, si no muestra el fallback.
- *
- * 4) Operador ternario para estilos dinámicos →
- *    classification === 'AA' ? '#4CAF50' : '#E5A00D'
- *    Cambia el color del badge según la clasificación.
- *
- * USO EN EL PROYECTO:
- * - Home.jsx → <MovieCard title={...} image={...} genre={...} />  (modo simple)
- * - Cartelera.jsx → <MovieCard ...><children personalizados></MovieCard> (modo expandido)
- *
- * TIP PREGUNTA: "¿Qué es la prop children?"
- * → Es todo lo que se coloca ENTRE las etiquetas de apertura y cierre del componente.
- *   Es una prop especial de React que permite composición de componentes.
- *   Ejemplo: <MovieCard>ESTO es children</MovieCard>
- *
- * TIP PREGUNTA: "¿Por qué MovieCard se usa en 2 páginas distintas?"
- * → Porque es REUTILIZABLE. En Home muestra info básica, en Cartelera
- *   muestra info extendida usando children. Misma estructura, diferente contenido.
- */
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -90,8 +55,6 @@ function MovieCard({ title, image, genre, duration, classification, badge, child
         posterBlock
       )}
 
-      {/* Si hay children (contenido personalizado del padre), los muestra.
-          Si no, muestra el título y género por defecto. */}
       <div style={{ padding: '10px 12px' }}>
         {children || (
           <>

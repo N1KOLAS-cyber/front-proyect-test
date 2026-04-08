@@ -1,0 +1,63 @@
+.pelicula-detalle-page {
+  min-height: 100vh;
+  margin-top: 60px;
+  background: transparent;
+  color: #fff;
+}
+
+.pelicula-detalle-container {
+  padding: 32px 32px 60px;
+}
+
+.pelicula-detalle-loading {
+  min-height: 100vh;
+  margin-top: 60px;
+  padding: 48px 32px;
+  text-align: center;
+  color: #888;
+}
+
+.pelicula-detalle-loading i {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.pelicula-detalle-empty {
+  min-height: 100vh;
+  margin-top: 60px;
+  padding: 48px 32px;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #fff;
+}
+
+.pelicula-detalle-link-button {
+  display: inline-block;
+  text-decoration: none;
+  background: var(--accent-red);
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.pelicula-breadcrumb {
+  margin-bottom: 20px;
+  font-size: 0.75rem;
+}
+
+.pelicula-breadcrumb a {
+  color: #888;
+  text-decoration: none;
+}
+
+.pelicula-breadcrumb-sep {
+  color: #444;
+  margin: 0 8px;
+}
+
+.pelicula-breadcrumb-current {
+  color: var(--accent-red);
+}

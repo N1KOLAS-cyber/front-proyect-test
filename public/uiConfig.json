@@ -1,0 +1,6 @@
+{
+  "tabsCartelera": ["HOY", "MANANA", "PROXIMOS ESTRENOS"],
+  "formatosCartelera": ["TODOS", "IMAX", "PLATINO", "PREMIUM", "4DX", "ATMOS"],
+  "showtimesCartelera": ["15:00", "18:00", "21:00"],
+  "categoriasAlimentos": ["TODOS", "SNACKS", "BEBIDAS", "COMIDA", "DULCES"]
+}

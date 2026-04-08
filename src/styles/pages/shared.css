@@ -1,0 +1,51 @@
+.page-shell {
+  min-height: 100vh;
+  margin-top: 60px;
+  background: transparent;
+  color: #fff;
+}
+
+.page-container {
+  padding: 36px 32px 20px;
+}
+
+.section-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.section-title-accent {
+  width: 3px;
+  height: 18px;
+  background: var(--accent-red);
+  border-radius: 2px;
+}
+
+.section-subtitle {
+  font-size: 0.8rem;
+  color: #888;
+  margin-left: 13px;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 40px 0;
+  color: #888;
+}
+
+.loading-state i {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    padding: 28px 20px 16px;
+  }
+
+  .section-subtitle {
+    margin-left: 0;
+  }
+}

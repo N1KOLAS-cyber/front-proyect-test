@@ -1,35 +1,3 @@
-/**
- * PromoCard.jsx — COMPONENTE REUTILIZABLE para tarjetas de promociones.
- *
- * CONCEPTOS CLAVE DEMOSTRADOS:
- *
- * 1) Props variadas → title, description, type, icon, color, perks (array).
- *    Cada promo tiene datos diferentes pero usa la misma estructura visual.
- *
- * 2) Renderizado de listas con .map() →
- *    perks.map(perk => ...) itera el array de beneficios y crea un <span> por cada uno.
- *    Cada elemento necesita un key único (usamos el texto del perk).
- *
- * 3) CSS Grid en componente → gridTemplateColumns: '200px 1fr'
- *    Divide la card en 2 columnas: panel izquierdo fijo (200px) + contenido flexible (1fr).
- *
- * 4) Clases CSS para responsive → 'otros-card' y 'otros-icon-panel'
- *    Estas clases se usan en las media queries de index.css para adaptar
- *    el layout en tablet (1 columna) y móvil (completamente apilado).
- *
- * 5) Interpolación de color dinámico →
- *    `${color}22` → Añade transparencia al color hexadecimal.
- *    Cada promo tiene su propio color (dorado, rojo, morado) y se aplica consistentemente.
- *
- * TIP PREGUNTA: "¿Por qué usas Grid aquí y Flex en otros componentes?"
- * → Grid es ideal cuando necesitas un layout de 2 dimensiones (filas Y columnas),
- *   como esta card con panel lateral fijo + contenido. Flexbox es mejor para
- *   layouts de 1 dimensión (fila O columna).
- *
- * TIP PREGUNTA: "¿Qué pasa si perks es undefined?"
- * → Usamos perks && perks.map() para protegernos. Si perks no existe,
- *   la evaluación se detiene en el && y no intenta llamar a .map().
- */
 import React from 'react';
 
 function PromoCard({ title, description, type, icon, color, perks }) {
@@ -43,7 +11,6 @@ function PromoCard({ title, description, type, icon, color, perks }) {
       gridTemplateColumns: '200px 1fr',
       transition: 'transform 0.25s'
     }}>
-      {/* Panel izquierdo con icono — usa className para responsive */}
       <div className="otros-icon-panel" style={{
         background: `linear-gradient(135deg, ${color}22 0%, #111 100%)`,
         borderRight: `1px solid ${color}33`,
@@ -66,7 +33,6 @@ function PromoCard({ title, description, type, icon, color, perks }) {
         }}>{type}</span>
       </div>
 
-      {/* Panel derecho con contenido */}
       <div style={{ padding: '24px 28px' }}>
         <h2 style={{ fontSize: '1.3rem', fontWeight: 800, marginBottom: 8, color: '#fff' }}>
           {title}
@@ -75,7 +41,6 @@ function PromoCard({ title, description, type, icon, color, perks }) {
           {description}
         </p>
 
-        {/* Renderizado de lista (array) con .map() — cada perk necesita key */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 20 }}>
           {perks && perks.map(perk => (
             <span key={perk} style={{

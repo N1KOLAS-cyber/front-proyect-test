@@ -1,19 +1,17 @@
-/**
- * PeliculaDetalle.jsx — Detalle de película (ruta dinámica "/pelicula/:id").
- * useParams lee el id de la URL; los datos se resuelven contra peliculas.json.
- */
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { getPeliculas } from '../data/cinemaApi';
+import '../styles/pages/pelicula-detalle.css';
 
 function PeliculaDetalle() {
+  // Ruta dinámica
   const { id } = useParams();
-  const navigate = useNavigate();
   const [pelicula, setPelicula] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let cancelled = false;
+    // Buscar detalle por id
     getPeliculas()
       .then((data) => {
         if (cancelled) return;
@@ -36,49 +34,38 @@ function PeliculaDetalle() {
 
   if (loading) {
     return (
-      <div className="fade-in" style={{ minHeight: '100vh', marginTop: '60px', padding: '48px 32px', textAlign: 'center', color: '#888' }}>
-        <i className="fa-solid fa-spinner fa-spin" style={{ fontSize: '2rem', marginBottom: '10px' }} />
+      <div className="fade-in pelicula-detalle-loading">
+        <i className="fa-solid fa-spinner fa-spin" />
         <p>Cargando película...</p>
       </div>
     );
   }
 
   if (!pelicula) {
+    // Estado vacío
     return (
-      <div className="fade-in" style={{ minHeight: '100vh', marginTop: '60px', padding: '48px 32px', maxWidth: 560, margin: '0 auto', color: '#fff' }}>
+      <div className="fade-in pelicula-detalle-empty">
         <h1 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: 12 }}>Película no encontrada</h1>
         <p style={{ color: '#888', fontSize: '0.9rem', marginBottom: 24 }}>
           No hay una ficha para el id <strong style={{ color: '#ccc' }}>{id}</strong>. Vuelve a la cartelera para elegir un título.
         </p>
-        <button
-          type="button"
-          onClick={() => navigate('/cartelera')}
-          style={{
-            background: 'var(--accent-red)',
-            color: '#fff',
-            border: 'none',
-            padding: '10px 20px',
-            borderRadius: '6px',
-            fontWeight: 700,
-            fontSize: '0.8rem',
-            cursor: 'pointer',
-          }}
-        >
+        <Link to="/cartelera" className="pelicula-detalle-link-button">
           Ir a cartelera
-        </button>
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="fade-in" style={{ minHeight: '100vh', marginTop: '60px', background: 'transparent', color: '#fff' }}>
-      <div className="container" style={{ padding: '32px 32px 60px' }}>
-        <nav style={{ marginBottom: 20, fontSize: '0.75rem' }}>
-          <Link to="/" style={{ color: '#888', textDecoration: 'none' }}>Inicio</Link>
-          <span style={{ color: '#444', margin: '0 8px' }}>/</span>
-          <Link to="/cartelera" style={{ color: '#888', textDecoration: 'none' }}>Cartelera</Link>
-          <span style={{ color: '#444', margin: '0 8px' }}>/</span>
-          <span style={{ color: '#E50914' }}>Detalle</span>
+    <div className="fade-in pelicula-detalle-page">
+      <div className="container pelicula-detalle-container">
+        {/* Breadcrumb */}
+        <nav className="pelicula-breadcrumb">
+          <Link to="/">Inicio</Link>
+          <span className="pelicula-breadcrumb-sep">/</span>
+          <Link to="/cartelera">Cartelera</Link>
+          <span className="pelicula-breadcrumb-sep">/</span>
+          <span className="pelicula-breadcrumb-current">Detalle</span>
         </nav>
 
         <div className="pelicula-detalle-grid">
@@ -178,10 +165,10 @@ function PeliculaDetalle() {
                 <i className="fa-solid fa-ticket-simple" style={{ marginRight: 8 }} />
                 Comprar boletos
               </button>
-              <button
-                type="button"
-                onClick={() => navigate(-1)}
+              <Link
+                to="/cartelera"
                 style={{
+                  textDecoration: 'none',
                   background: 'transparent',
                   color: '#ccc',
                   border: '1px solid #333',
@@ -189,11 +176,11 @@ function PeliculaDetalle() {
                   borderRadius: 6,
                   fontWeight: 600,
                   fontSize: '0.8rem',
-                  cursor: 'pointer',
+                  cursor: 'pointer'
                 }}
               >
                 Volver
-              </button>
+              </Link>
             </div>
           </div>
         </div>
